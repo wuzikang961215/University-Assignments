@@ -1,0 +1,79 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
+/* the input of this class is from terminal and output is a
+    neighbor table represented by a two-dimensional array
+ */
+class NeighborTable2 {
+
+    public ArrayList<String> routers; // for recording the routers
+    public ArrayList<Neighbors> edges; // for recording edges
+    public static int sorted;
+
+    // constructor to initialize routers
+    public NeighborTable2() {
+        routers = new ArrayList<String>();
+    }
+
+    // the input is the name of router and there is no output
+    public void addRouter(String router) {
+        routers.add(router);
+    }
+
+    // sort the router Arraylist by alphabetic order
+    public void sortRouters() {
+        Collections.sort(routers);
+    }
+
+    // this method initialize the neighbor table with all edges set to -1
+    public void initializeEdges() {
+        edges = new ArrayList<Neighbors>();
+        for (int i = 0; i < routers.size(); i++)
+            edges.add(new Neighbors());
+    }
+
+    // this method adds an edge. There are three inputs: two routers and one edge value
+    public void addEdge(String router1, String router2, int edge){
+        if (sorted == 0) {
+            sortRouters();
+            sorted++;
+        }
+        int index1 = -1; // this variable is the index of router 1
+        int index2 = -1; // this variable is the index of router 2
+        int known1 = 0; // for confirming the value of index 1
+        int known2 = 0; // for confirming the value of index 2
+        for (int i = 0; i < routers.size(); i++) {
+            if (routers.get(i).equals(router1)) {
+                index1 = i; // router1 should be here
+                known1++;
+            }
+            if (routers.get(i).equals(router2)) {
+                index2 = i;
+                known2++;
+            }
+        }
+        // if router 1 is new
+        if (known1 == 0) {
+            routers.add(router1); // insert router1 at index1 position
+            Collections.sort(routers);
+            for (index1 = 0; index1 < routers.size(); index1++){
+                if (routers.get(index1).equals(router1))
+                    break;
+            }
+            edges.add(index1, new Neighbors());
+        }
+        // if router 2 is new
+        if (known2 == 0) {
+            routers.add(router2); // insert router1 at index2 position
+            Collections.sort(routers);
+            for (index2 = 0; index2 < routers.size(); index2++){
+                if (routers.get(index2).equals(router2))
+                    break;
+            }
+            edges.add(index2, new Neighbors());
+        }
+        // add value in edges
+        edges.get(index1).addSet(index2, router2, edge);
+        edges.get(index2).addSet(index1, router1, edge);
+    }
+}

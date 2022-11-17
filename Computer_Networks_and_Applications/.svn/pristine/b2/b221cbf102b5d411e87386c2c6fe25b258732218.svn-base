@@ -1,0 +1,115 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.text.*;
+import java.util.*;
+
+// this class contains main method and reads input, creates neighbor table and operates all the other classes
+class DijkstraNlogN{
+
+    public static NeighborTable neighborTable;
+    public static NeighborTable2 neighborTable2;
+    public static LinkState linkState;
+    public static RoutingNlogN routingTable;
+
+    /* this method reads input from terminal and sends the value to neighborTable method to create
+    a neighbor table */
+public static void readInput() {
+        try {
+            BufferedReader routingInput = new BufferedReader(new InputStreamReader(System.in));
+            String inputLine = routingInput.readLine();
+            int part = 0; // to handle different parts of input
+            while (inputLine != null) {
+                if (inputLine.equals("LINKSTATE") || inputLine.equals("UPDATE") ) {
+                    if (inputLine.equals("LINKSTATE")) { // only initialize when link state shows up
+                        neighborTable2.initializeEdges();
+                        neighborTable.initializeEdges();
+                    }
+                    inputLine = routingInput.readLine(); // move to the next line
+                    part++;
+                }
+                if (inputLine.equals("END"))
+                    break;
+                if (part == 0) {
+                    neighborTable2.addRouter(inputLine);
+                    neighborTable.addRouter(inputLine);
+                }
+                else {
+                    // handle the line here
+                    int edge = 0;
+                    int blank = 0; // to calculate the blanks
+                    String router1 = "";
+                    String router2 = "";
+                    int r1 = 0; // to confirm the value of router1
+                    int r2 = 0; // to confirm the value of router2
+                    int e3 = 0; // to confirm the value of edge
+                    int start = 0; // to record the start of each variable name
+                    int edgeConfirmed = 0; // to confirm the values of router1, router2 and edge
+                    for (int i = 0; i < inputLine.length(); i++) {
+                        if (inputLine.charAt(i) == ' ')
+                            blank++;
+                        if (blank == 1 && r1 == 0) {
+                            router1 = inputLine.substring(0, i);
+                            r1++;
+                            start = i+1;
+                        }
+                        if (blank == 2) {
+                            if (r2 == 0) {
+                                router2 = inputLine.substring(start, i);
+                                r2++;
+                                start = i + 1;
+                            }
+                            // if there is no more blanks
+                            if (i == inputLine.length()-1) {
+                                edge = Integer.parseInt(inputLine.substring(start, i + 1));
+                                edgeConfirmed++;
+                            }
+                        }
+                        if (blank == 3 && e3 == 0) {
+                            edge = Integer.parseInt(inputLine.substring(start, i));
+                            e3++;
+                            start = i + 1;
+                            edgeConfirmed++;
+                        }
+                        if (edgeConfirmed != 0) {
+                            // System.out.println("Add " + router1 + "," + router2 + " " + edge);
+                            neighborTable.addEdge(router1, router2, edge);
+                            neighborTable2.addEdge(router1, router2, edge);
+                            linkState.updateLSDB(neighborTable.routers, neighborTable.edges);
+                            routingTable.routing(neighborTable2.routers, neighborTable2.edges);
+                            edgeConfirmed = 0; // only add edge once throughout the loop
+                        }
+                        // handle the optional list here
+                        if (String.valueOf(inputLine.charAt(i)).equals(",")) {
+                            printOutput(inputLine.substring(start, i));
+                            start = i+1;
+                        }
+                        // handle the last String of optional list here
+                        if (blank == 3 && i == inputLine.length() - 1 && inputLine.charAt(i) != ' ')
+                            printOutput(inputLine.substring(start));
+                    }
+                }
+                inputLine = routingInput.readLine();
+            }
+        }
+        catch (java.io.IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    // this method prints the expected output
+    public static void printOutput(String router){
+        neighborTable.printNeighbor(router);
+        linkState.printLinkState(router);
+        routingTable.printRouting(router);
+    }
+
+    // main method
+    public static void main(String[] args) {
+        neighborTable = new NeighborTable();
+        neighborTable2 = new NeighborTable2();
+        linkState = new LinkState();
+        routingTable = new RoutingNlogN();
+
+        readInput();
+    }
+}

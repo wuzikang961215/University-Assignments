@@ -1,0 +1,3 @@
+In question 1 I just build the person class as required
+In question 2 When I deal with the id, I used total number of players as a static variable and make id = total number. 
+In question 3 I built a queue to add the players in the club. Functions such as remove players, print members, count members or get highest ranked player are achieved by traversing through queue. 

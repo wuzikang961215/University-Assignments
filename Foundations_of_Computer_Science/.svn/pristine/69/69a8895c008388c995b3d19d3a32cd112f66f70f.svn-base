@@ -1,0 +1,13 @@
+int n is the number of disks.
+Pole1 represents source pole, while pole2 represents auxiliary pole and pole3 represents destination pole.
+
+The move can be divided into three steps:
+Step 1: Move (n-1) disks from pole1 to pole2.
+Step 2: Move the nth disk, which is the biggest, from pole1 to pole3.
+Step 3: Move (n-1) disks from pole2 to pole3.
+
+Step 2 is the same case that to move when there is only one disk. So just print "move the disk n from pole1 to pole3".
+
+In step 1, pole2 becomes destination pole and pole3 is the auxiliary pole. So change the value of pole2 and pole3 and subtract 1 from n. Then call the solve() method again. After calling ,there are three steps that move the (n-1) disks from pole1 to pole2, which is: step 1: move (n-2) disks from pole1 to pole3; step2: move the (n-1)th disk from pole1 to pole2; step3: move (n-2) disks from pole3 to pole2. And then every step calls the solve() method again until n reaches the value of 1. And this is the end of moving where the program move the last disk from pole1 to pole3 which is the same as Step 2 in the beginning.
+
+In step 3, pole2 becomes source pole and pole1 is the auxiliary pole. So change the value of pole1 and pole2 and subtract 1 from n. Then call the solve() method and it still works recursively just the same way as that of Step 1.

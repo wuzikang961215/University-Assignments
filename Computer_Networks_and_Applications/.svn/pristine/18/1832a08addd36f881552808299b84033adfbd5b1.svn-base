@@ -1,0 +1,78 @@
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+L
+K
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+X
+Y
+Z
+a
+b
+g
+h
+j
+u
+m
+v
+w
+x
+y
+z
+LINKSTATE
+A B 35
+D A 4
+F G 20
+J M 2
+J K 32
+a z 20
+b g 10 F G b g
+h j 30
+m v 40
+w x 34
+W w 20
+X y 30
+y z 31
+v m 5
+S T 20
+J K 6
+G K 30 
+G M 50
+H P 23
+Z W 14
+N b 30
+UPDATE
+Q R 4
+R S 32
+M A 23
+j b 20
+O Q 35
+L S 21
+Z C 20
+Z S 15
+W y 10
+A y 39
+A v 10 
+A V 20
+L v 29
+Z O 5
+T N 21 
+G g 14 A,B,K,I,P,Q,U,V,W,X,Y,Z,a,h,v,y
+END

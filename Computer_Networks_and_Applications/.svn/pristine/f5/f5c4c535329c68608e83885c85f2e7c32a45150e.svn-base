@@ -1,0 +1,84 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
+// the input of this class is neighbor table and output is the paths of each node
+class LinkState{
+
+    public ArrayList<ArrayList<String>> LSDB; // an array of routers' link state database
+    public ArrayList<String> routerLinkState; // a router's link state database
+    public ArrayList<String> routers2; // an ArrayList containing all the routers
+    public ArrayList<ArrayList<Integer>> edges2; // an ArrayList containing all edges in the topology
+    public ArrayList<Integer> duplicates; // this variable is for recording the duplicates during recursion
+
+    // constructor to initialize routers2 and edges2
+    public LinkState(){
+        routers2 = new ArrayList<String>();
+        edges2 = new ArrayList<ArrayList<Integer>>();
+    }
+
+    // this method is recursive in order to find all paths of the input router
+    public void addToLSDB(int index) {
+        int paths = 0; // this variable is to tell if there is any further path
+        ArrayList<String> routerLS = new ArrayList<String>(); // this is the path of each iteration
+        ArrayList<Integer> indexes = new ArrayList<Integer>(); // this variable is to keep record of routers that have further paths
+        duplicates.add(index);
+        for (int i = 0; i < edges2.get(index).size(); i++) {
+            if (edges2.get(index).get(i) != -1) {
+                int duplicate = 0; // this variable is to tell if there's any duplicates of previous routers
+                for (int j = 0; j < duplicates.size(); j++) {
+                    if (duplicates.get(j) == i) {
+                        duplicate = 1;
+                        break;
+                    }
+                }
+                // when there's no duplicates
+                if (duplicate == 0) {
+                    // add in the alphabetical order
+                    if ((int) routers2.get(index).charAt(0) < (int) routers2.get(i).charAt(0))
+                        routerLS.add(routers2.get(index) + "," + routers2.get(i) + "," + edges2.get(index).get(i));
+                    else
+                        routerLS.add(routers2.get(i) + "," + routers2.get(index) + "," + edges2.get(index).get(i));
+                    indexes.add(i);
+                }
+            }
+        }
+        if (indexes.size() != 0) {
+            routerLinkState.addAll(routerLS);
+            for (int i = 0; i < indexes.size(); i++)
+                addToLSDB(indexes.get(i));
+        }
+    }
+
+    /* this method updates the link state database of each router.
+        the inputs are the routers and neighbor table and updates an
+        ArrayList of String ArrayLists containing each router's reachable
+        paths */
+    public void updateLSDB(ArrayList<String> routers, ArrayList<ArrayList<Integer>> edges) {
+        LSDB = new ArrayList<ArrayList<String>>();
+        edges2 = edges;
+        routers2 = routers;
+        for (int i = 0; i < routers.size(); i++) {
+            routerLinkState = new ArrayList<String>();
+            duplicates = new ArrayList<Integer>();
+            addToLSDB(i);
+            Collections.sort(routerLinkState); // sort the link state of one router here
+            LSDB.add(routerLinkState);
+        }
+    }
+
+    // this method prints the linkstate by printing out the elements in LSDB ArrayList
+    public void printLinkState(String router) {
+        System.out.println(router + " LSDB:");
+        int index;
+        // find out where router is
+        for (index = 0; index < routers2.size(); index++) {
+            if (routers2.get(index).equals(router))
+                break;
+        }
+        if (LSDB.size() !=0 ) { // only when LSDB is not empty
+            for (int j = 0; j < LSDB.get(index).size(); j++)
+                System.out.println(LSDB.get(index).get(j));
+        }
+        System.out.println("");
+    }
+}

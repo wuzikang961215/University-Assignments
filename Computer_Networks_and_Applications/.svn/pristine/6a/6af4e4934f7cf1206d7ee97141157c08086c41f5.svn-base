@@ -1,0 +1,107 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
+/* the input of this class is from terminal and output is a
+    neighbor table represented by a two-dimensional array
+ */
+class NeighborTable {
+
+    public ArrayList<String> routers; // for recording the routers
+    public ArrayList<Integer> line; // each line of the two dimensional arraylist
+    public ArrayList<ArrayList<Integer>> edges; // for recording edges
+    public static int sorted; // to sort the routers for the first time an edge is added
+
+    // constructor to initialize routers
+    public NeighborTable() {
+        routers = new ArrayList<String>();
+    }
+
+    // the input is the name of router and there is no output
+    public void addRouter(String router) {
+        routers.add(router);
+    }
+
+    // sort the router Arraylist by alphabetic order
+    public void sortRouters() {
+        Collections.sort(routers);
+    }
+
+    // this method initialize the neighbor table with all edges set to -1
+    public void initializeEdges() {
+        edges = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i < routers.size(); i++) {
+            line = new ArrayList<Integer>();
+            for (int j = 0; j < routers.size(); j++)
+                line.add(-1);
+            edges.add(line);
+        }
+    }
+
+    // this method adds an edge. There are three inputs: two routers and one edge value
+    public void addEdge(String router1, String router2, int edge){
+        if (sorted == 0) {
+            sortRouters();
+            sorted++;
+        }
+        int index1 = -1; // this variable is the index of router 1
+        int index2 = -1; // this variable is the index of router 2
+        int found1 = 0; // this variable is to tell if the router1 are found in the routers array
+        int found2 = 0; // this variable is to tell if the router2 are found in the routers array
+        for (int i = 0; i < routers.size(); i++) {
+            if ( routers.get(i).equals(router1) ) {
+                index1 = i; // router1 should be here
+                found1++;
+            }
+            if ( routers.get(i).equals(router2) ) {
+                index2 = i;
+                found2++;
+            }
+        }
+        // if router 1 is new
+        if (found1 == 0) {
+            routers.add(router1);
+            Collections.sort(routers);
+            for (index1 = 0; index1 < routers.size(); index1++){
+                if (routers.get(index1).equals(router1))
+                    break;
+            }
+            edges.add(index1, new ArrayList<Integer>());
+            for (int i = 0; i < routers.size() - 1; i++)
+                edges.get(index1).add(-1);
+            for (int j = 0; j < edges.size(); j++)
+                edges.get(j).add(index1, -1);
+        }
+        // if router 2 is new
+        if (found2 == 0) {
+            routers.add(router2);
+            Collections.sort(routers);
+            for (index2 = 0; index2 < routers.size(); index2++){
+                if (routers.get(index2).equals(router2))
+                    break;
+            }
+            edges.add(index2, new ArrayList<Integer>());
+            for (int i = 0; i < routers.size() - 1; i++)
+                edges.get(index2).add(-1);
+            for (int j = 0; j < edges.size(); j++)
+                edges.get(j).add(index2, -1);
+        }
+        // add edge value in the table
+        edges.get(index1).set(index2, edge);
+        edges.get(index2).set(index1, edge);
+    }
+
+    public void printNeighbor(String router){
+        System.out.println(router + " Neighbour Table:");
+        int index; // index of the router
+        for (index = 0; index < routers.size(); index++) {
+            if (routers.get(index).equals(router))
+                break;
+        }
+        // extract all the neighbors
+        for (int i = 0; i < edges.get(index).size(); i++) {
+            if (edges.get(index).get(i) != -1)
+                System.out.println(routers.get(i) + "," + edges.get(index).get(i));
+        }
+        System.out.println("");
+    }
+}

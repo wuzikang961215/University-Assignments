@@ -1,0 +1,44 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
+// this class is for recording neighbors of each unique router in the topology
+public class Neighbors {
+
+    public ArrayList<Set> neighbors;
+
+    // constructor
+    public Neighbors() {
+        neighbors = new ArrayList<Set>();
+    }
+
+    // this method is to add a set to the neighbors ArrayList. The input is the router name and the distance to it
+    public void addSet(int index, String router, int distance) {
+        if (neighbors.size() == 0)
+            neighbors.add(new Set(index, router, distance));
+        else {
+            for (int i = 0; i < neighbors.size(); i++) {
+                // if it's already there
+                if (neighbors.get(i).router.equals(router)){
+                    if (distance == -1)
+                        neighbors.remove(i);
+                    else
+                        neighbors.get(i).distance = distance; // update distance
+                    break;
+                }
+                // sort by number
+                if (neighbors.get(i).distance > distance) {
+                    neighbors.add(i, new Set(index, router, distance));
+                    break;
+                }
+                else if (neighbors.get(i).distance == distance) {
+                    // sort by router name then
+                    if ((int) neighbors.get(i).router.charAt(0) > (int) router.charAt(0) )
+                        neighbors.add(i, new Set(index, router, distance));
+                    break;
+                }
+                else if (neighbors.get(i).distance < distance && i == neighbors.size() - 1)
+                    neighbors.add(new Set(index, router, distance));
+            }
+        }
+    }
+}

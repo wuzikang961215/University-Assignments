@@ -1,0 +1,25 @@
+d
+m
+p
+b
+c
+n
+q
+LINKSTATE
+b m 20
+n d 3
+n c 12
+m n 25
+n b 22
+b c 9
+b p 14
+c q 8
+q p 20 b,n,p
+UPDATE
+c q 4
+x s 13
+A p 21 x
+m x 2 x,m,s,A
+n s 5
+A s 10 b,c,d,n
+END
