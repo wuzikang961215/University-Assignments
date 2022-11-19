@@ -1,9 +1,0 @@
-All:
-	javac Dijkstra.java
-	javac LinkState.java
-	javac RoutingTable.java
-	javac DijkstraNlogN.java
-	javac Neighbors.java
-
-clean:
-	rm *.class
